@@ -1,0 +1,1 @@
+- [Generated client TypeScript](generated-client-typescript.md) — include DOM iterable types in composite library configs because generated Headers helpers use `Headers.entries()`.

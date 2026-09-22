@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-card-border: hsl(var(--card-border));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-popover-border: hsl(var(--popover-border));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-primary-border: var(--primary-border);
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-secondary-border: var(--secondary-border);
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-muted-border: var(--muted-border);
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-accent-border: var(--accent-border);
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-sidebar: hsl(var(--sidebar));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+  --font-sans: var(--app-font-sans);
+  --font-mono: var(--app-font-mono);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --background: 48 33% 97%;
+  --foreground: 222 32% 18%;
+  --border: 36 20% 86%;
+  --card: 45 40% 99%;
+  --card-foreground: 222 32% 18%;
+  --card-border: 38 26% 88%;
+  --sidebar: 222 32% 18%;
+  --sidebar-foreground: 45 40% 96%;
+  --sidebar-border: 222 25% 27%;
+  --sidebar-primary: 41 88% 63%;
+  --sidebar-primary-foreground: 222 32% 18%;
+  --sidebar-accent: 222 26% 25%;
+  --sidebar-accent-foreground: 45 40% 97%;
+  --sidebar-ring: 41 88% 63%;
+  --popover: 45 40% 99%;
+  --popover-foreground: 222 32% 18%;
+  --popover-border: 38 26% 88%;
+  --primary: 222 32% 18%;
+  --primary-foreground: 45 40% 97%;
+  --secondary: 43 54% 91%;
+  --secondary-foreground: 222 32% 18%;
+  --muted: 43 27% 93%;
+  --muted-foreground: 218 13% 45%;
+  --accent: 41 88% 63%;
+  --accent-foreground: 222 32% 18%;
+  --destructive: 3 62% 47%;
+  --destructive-foreground: 0 0% 98%;
+  --input: 37 23% 82%;
+  --ring: 41 88% 63%;
+  --app-font-sans: 'DM Sans', sans-serif;
+  --app-font-mono: 'Space Grotesk', monospace;
+  --radius: .8rem;
+  --shadow-sm: 0 5px 12px hsl(222 32% 18% / .06);
+  --shadow: 0 9px 24px hsl(222 32% 18% / .07);
+  --shadow-md: 0 14px 34px hsl(222 32% 18% / .09);
+  --shadow-lg: 0 22px 48px hsl(222 32% 18% / .12);
+  --opaque-button-border-intensity: -8;
+  --elevate-1: rgba(0,0,0,.03);
+  --elevate-2: rgba(0,0,0,.08);
+  --primary-border: hsl(var(--primary));
+  --secondary-border: hsl(var(--secondary));
+  --muted-border: hsl(var(--muted));
+  --accent-border: hsl(var(--accent));
+  --destructive-border: hsl(var(--destructive));
+  --sidebar-primary-border: hsl(var(--sidebar-primary));
+  --sidebar-accent-border: hsl(var(--sidebar-accent));
+}
+
+.dark {
+  --background: 222 32% 18%;
+  --foreground: 45 40% 97%;
+  --border: 222 23% 31%;
+  --card: 222 27% 23%;
+  --card-foreground: 45 40% 97%;
+  --card-border: 222 23% 31%;
+  --sidebar: 222 37% 12%;
+  --sidebar-foreground: 45 40% 97%;
+  --sidebar-border: 222 25% 22%;
+  --primary: 41 88% 63%;
+  --primary-foreground: 222 32% 18%;
+  --secondary: 222 23% 30%;
+  --secondary-foreground: 45 40% 97%;
+  --muted: 222 23% 27%;
+  --muted-foreground: 45 18% 72%;
+  --accent: 41 88% 63%;
+  --accent-foreground: 222 32% 18%;
+  --destructive: 3 62% 57%;
+  --destructive-foreground: 222 32% 18%;
+  --input: 222 23% 34%;
+  --ring: 41 88% 63%;
+  --popover: 222 27% 23%;
+  --popover-foreground: 45 40% 97%;
+  --popover-border: 222 23% 31%;
+  --sidebar-primary: 41 88% 63%;
+  --sidebar-primary-foreground: 222 32% 18%;
+  --sidebar-accent: 222 26% 21%;
+  --sidebar-accent-foreground: 45 40% 97%;
+  --sidebar-ring: 41 88% 63%;
+  --primary-border: hsl(var(--primary));
+  --secondary-border: hsl(var(--secondary));
+  --muted-border: hsl(var(--muted));
+  --accent-border: hsl(var(--accent));
+  --destructive-border: hsl(var(--destructive));
+  --sidebar-primary-border: hsl(var(--sidebar-primary));
+  --sidebar-accent-border: hsl(var(--sidebar-accent));
+}
+
+@layer base {
+  * { @apply border-border; }
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    background-image: radial-gradient(hsl(var(--foreground) / .045) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+}
+
+@keyframes rise-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes soft-pulse { 0%,100% { opacity: .55; } 50% { opacity: 1; } }
+.page-enter { animation: rise-in .42s ease-out both; }
+.stagger-1 { animation-delay: .05s; }
+.stagger-2 { animation-delay: .1s; }
+.stagger-3 { animation-delay: .15s; }
+.stagger-4 { animation-delay: .2s; }
+.skeleton { animation: soft-pulse 1.5s ease-in-out infinite; background: hsl(var(--muted)); }
+.display { font-family: var(--app-font-mono); letter-spacing: -.045em; }
+.noise::after { content: ''; position: fixed; inset: 0; pointer-events: none; opacity: .035; background-image: radial-gradient(rgba(32, 42, 64, .45) .6px, transparent .6px); background-size: 7px 7px; z-index: 50; }

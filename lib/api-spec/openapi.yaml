@@ -1,22 +1,24 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: API for the student attendance management system
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
-    description: Health operations
+  - name: profile
+  - name: dashboard
+  - name: classes
+  - name: lectures
+  - name: attendance
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,13 +26,301 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /me:
+    get:
+      operationId: getMe
+      tags: [profile]
+      summary: Get the current user's profile
+      responses:
+        "200":
+          description: Profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+    put:
+      operationId: upsertMe
+      tags: [profile]
+      summary: Create or update the current user's profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileInput"
+      responses:
+        "200":
+          description: Saved profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get role-specific dashboard totals
+      responses:
+        "200":
+          description: Dashboard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+  /classes:
+    get:
+      operationId: listClasses
+      tags: [classes]
+      summary: List classes for the current user
+      responses:
+        "200":
+          description: Classes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Class"
+    post:
+      operationId: createClass
+      tags: [classes]
+      summary: Create a class as a teacher
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClassInput"
+      responses:
+        "201":
+          description: Created class
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Class"
+  /classes/join:
+    post:
+      operationId: joinClass
+      tags: [classes]
+      summary: Join a class with its invite code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JoinClassInput"
+      responses:
+        "200":
+          description: Joined class
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Class"
+  /classes/{classId}:
+    get:
+      operationId: getClass
+      tags: [classes]
+      summary: Get a class
+      parameters:
+        - $ref: "#/components/parameters/ClassId"
+      responses:
+        "200":
+          description: Class
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClassDetail"
+  /classes/{classId}/lectures:
+    get:
+      operationId: listLectures
+      tags: [lectures]
+      summary: List lectures in a class
+      parameters:
+        - $ref: "#/components/parameters/ClassId"
+      responses:
+        "200":
+          description: Lectures
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Lecture"
+    post:
+      operationId: createLecture
+      tags: [lectures]
+      summary: Create a lecture with an attendance window
+      parameters:
+        - $ref: "#/components/parameters/ClassId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LectureInput"
+      responses:
+        "201":
+          description: Created lecture
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lecture"
+  /lectures/{lectureId}/attendance:
+    get:
+      operationId: getLectureAttendance
+      tags: [attendance]
+      summary: Get attendance records for a lecture
+      parameters:
+        - $ref: "#/components/parameters/LectureId"
+      responses:
+        "200":
+          description: Attendance records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AttendanceRecord"
+    post:
+      operationId: markAttendance
+      tags: [attendance]
+      summary: Mark the current student's attendance
+      parameters:
+        - $ref: "#/components/parameters/LectureId"
+      responses:
+        "201":
+          description: Attendance recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttendanceRecord"
 components:
+  parameters:
+    ClassId:
+      name: classId
+      in: path
+      required: true
+      schema:
+        type: integer
+    LectureId:
+      name: lectureId
+      in: path
+      required: true
+      schema:
+        type: integer
   schemas:
     HealthStatus:
       type: object
       properties:
+        status: { type: string }
+      required: [status]
+    Profile:
+      type: object
+      properties:
+        id: { type: integer }
+        clerkUserId: { type: string }
+        name: { type: string }
+        email: { type: string }
+        role:
+          type: string
+          enum: [teacher, student]
+        createdAt: { type: string, format: date-time }
+      required: [id, clerkUserId, name, email, role, createdAt]
+    ProfileInput:
+      type: object
+      properties:
+        name: { type: string, minLength: 1 }
+        email: { type: string, minLength: 1 }
+        role:
+          type: string
+          enum: [teacher, student]
+      required: [name, email, role]
+    Class:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        code: { type: string }
+        subject: { type: string }
+        teacherName: { type: string }
+        studentCount: { type: integer }
+        upcomingLectureCount: { type: integer }
+        createdAt: { type: string, format: date-time }
+      required: [id, name, code, subject, teacherName, studentCount, upcomingLectureCount, createdAt]
+    ClassDetail:
+      allOf:
+        - $ref: "#/components/schemas/Class"
+        - type: object
+          properties:
+            lectures:
+              type: array
+              items:
+                $ref: "#/components/schemas/Lecture"
+          required: [lectures]
+    ClassInput:
+      type: object
+      properties:
+        name: { type: string, minLength: 1 }
+        subject: { type: string, minLength: 1 }
+      required: [name, subject]
+    JoinClassInput:
+      type: object
+      properties:
+        code: { type: string, minLength: 4 }
+      required: [code]
+    Lecture:
+      type: object
+      properties:
+        id: { type: integer }
+        classId: { type: integer }
+        title: { type: string }
+        startsAt: { type: string, format: date-time }
+        endsAt: { type: string, format: date-time }
+        attendanceOpensAt: { type: string, format: date-time }
+        attendanceClosesAt: { type: string, format: date-time }
+        attendanceCount: { type: integer }
+        totalStudents: { type: integer }
+        attendanceMarked:
+          type: boolean
         status:
           type: string
-      required:
-        - status
-
+          enum: [upcoming, live, closed]
+      required: [id, classId, title, startsAt, endsAt, attendanceOpensAt, attendanceClosesAt, attendanceCount, totalStudents, attendanceMarked, status]
+    LectureInput:
+      type: object
+      properties:
+        title: { type: string, minLength: 1 }
+        startsAt: { type: string, format: date-time }
+        endsAt: { type: string, format: date-time }
+        attendanceOpensAt: { type: string, format: date-time }
+        attendanceClosesAt: { type: string, format: date-time }
+      required: [title, startsAt, endsAt, attendanceOpensAt, attendanceClosesAt]
+    AttendanceRecord:
+      type: object
+      properties:
+        id: { type: integer }
+        lectureId: { type: integer }
+        studentName: { type: string }
+        studentEmail: { type: string }
+        markedAt: { type: string, format: date-time }
+        status:
+          type: string
+          enum: [present, late]
+      required: [id, lectureId, studentName, studentEmail, markedAt, status]
+    DashboardSummary:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [teacher, student]
+        totalClasses: { type: integer }
+        totalLectures: { type: integer }
+        attendanceRate: { type: number }
+        upcomingLectures: { type: integer }
+        presentCount: { type: integer }
+        lateCount: { type: integer }
+        recentLectures:
+          type: array
+          items:
+            $ref: "#/components/schemas/Lecture"
+      required: [role, totalClasses, totalLectures, attendanceRate, upcomingLectures, presentCount, lateCount, recentLectures]
